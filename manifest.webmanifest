@@ -1,0 +1,26 @@
+{
+  "name": "游资心法 · 实战笔记",
+  "short_name": "游资心法",
+  "description": "68 份顶级游资实战笔记，离线阅读，随时翻阅",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#faf8f4",
+  "theme_color": "#a01a1a",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='%23a01a1a'/><text x='50%25' y='50%25' font-size='110' text-anchor='middle' dominant-baseline='central' fill='white' font-family='system-ui' font-weight='700'>游</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%23a01a1a'/><text x='50%25' y='50%25' font-size='290' text-anchor='middle' dominant-baseline='central' fill='white' font-family='system-ui' font-weight='700'>游</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
