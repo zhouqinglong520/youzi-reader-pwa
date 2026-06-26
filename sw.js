@@ -1,36 +1,47 @@
-// 游资心法 PWA Service Worker - 离线优先 + 网络回退
-const CACHE = 'youzi-reader-v6';
-const ASSETS = ['./', './index.html', './manifest.webmanifest'];
+const CACHE_NAME = 'youzi-reader-v7';
+const ASSETS = [
+  './',
+  './index.html',
+  './manifest.webmanifest',
+  './favicon.svg',
+  './icons.svg'
+];
 
-self.addEventListener('install', (e) => {
+self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then(cache => {
+      // Cache static assets, skip failures
+      return Promise.allSettled(
+        ASSETS.map(url => cache.add(url).catch(() => {}))
+      );
+    })
   );
+  self.skipWaiting();
 });
 
-self.addEventListener('activate', (e) => {
+self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    ).then(() => self.clients.claim())
+      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
+    )
   );
+  self.clients.claim();
 });
 
-self.addEventListener('fetch', (e) => {
-  const url = new URL(e.request.url);
-  // 只处理同源
-  if (url.origin !== location.origin) return;
+self.addEventListener('fetch', e => {
+  const req = e.request;
+  if (req.method !== 'GET') return;
+  
   e.respondWith(
-    caches.match(e.request).then(cached => {
-      if (cached) return cached;
-      return fetch(e.request).then(resp => {
-        // 缓存成功的 GET 请求
-        if (e.request.method === 'GET' && resp.status === 200) {
-          const clone = resp.clone();
-          caches.open(CACHE).then(c => c.put(e.request, clone));
+    caches.match(req).then(cached => {
+      const fetchPromise = fetch(req).then(response => {
+        if (response && response.status === 200) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(req, clone));
         }
-        return resp;
-      }).catch(() => caches.match('./index.html'));
+        return response;
+      }).catch(() => cached);
+      return cached || fetchPromise;
     })
   );
 });
