@@ -1,5 +1,5 @@
 // 游资心法 PWA Service Worker - 离线优先 + 网络回退
-const CACHE = 'youzi-reader-v5';
+const CACHE = 'youzi-reader-v6';
 const ASSETS = ['./', './index.html', './manifest.webmanifest'];
 
 self.addEventListener('install', (e) => {
