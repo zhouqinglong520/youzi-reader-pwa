@@ -1,5 +1,5 @@
 // 游资心法 PWA Service Worker - 离线优先 + 网络回退
-const CACHE = 'youzi-reader-v2';
+const CACHE = 'youzi-reader-v5';
 const ASSETS = ['./', './index.html', './manifest.webmanifest'];
 
 self.addEventListener('install', (e) => {
@@ -18,13 +18,11 @@ self.addEventListener('activate', (e) => {
 
 self.addEventListener('fetch', (e) => {
   const url = new URL(e.request.url);
-  // 只处理同源
   if (url.origin !== location.origin) return;
   e.respondWith(
     caches.match(e.request).then(cached => {
       if (cached) return cached;
       return fetch(e.request).then(resp => {
-        // 缓存成功的 GET 请求
         if (e.request.method === 'GET' && resp.status === 200) {
           const clone = resp.clone();
           caches.open(CACHE).then(c => c.put(e.request, clone));
